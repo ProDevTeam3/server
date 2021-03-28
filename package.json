@@ -1,0 +1,25 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:ProDevTeam3/server.git",
+  "author": "Pawel Sakaluk <paul.jackals@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "auth0": "^2.34.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "eslint": "^7.23.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.13.10",
+    "@babel/core": "^7.13.13",
+    "@babel/node": "^7.13.13",
+    "@babel/preset-env": "^7.13.12"
+  },
+  "scripts": {
+    "babel": "babel src -d es5out"
+  }
+}
