@@ -1,17 +1,33 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
+import cors from "cors";
+import express from "express";
 const app = express();
+const config = require('../config.js')
 
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    return res.json({message: 'Hello World!'})
-})
+const dbConnData = {
+    host: config.mongoHost,
+    port: config.mongoPort,
+    database: config.mongoDb
+};
 
-const port = process.env.PORT
-const host = process.env.HOST
-app.listen(port, () => {
-    console.log(`server listening at http://${host}:${port}`);
-});
+// Połączenie z bazą MongoDb
+
+const mongoose = require('mongoose');
+
+mongoose
+    .connect(`mongodb://${dbConnData.host}:${dbConnData.port}/${dbConnData.database}`, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false
+    })
+    .then(response => {
+        console.log(`Connected to MongoDB. Database name: "${response.connections[0].name}"`)
+        const port = config.port;
+        const host = config.host;
+        app.listen(port, () => {
+            console.log(`server listening at http://${host}:${port}`);
+        });
+    })
+    .catch(error => console.error('Error connecting to MongoDB', error));

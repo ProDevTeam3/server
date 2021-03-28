@@ -11,7 +11,8 @@
     "dotenv": "^8.2.0",
     "eslint": "^7.23.0",
     "express": "^4.17.1",
-    "mongoose": "^5.12.2"
+    "mongoose": "^5.12.2",
+    "nodemon": "^2.0.7"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.10",
@@ -20,6 +21,7 @@
     "@babel/preset-env": "^7.13.12"
   },
   "scripts": {
-    "babel": "babel src -d es5out"
+    "babel": "babel src -d out",
+    "start": "nodemon --exec babel-node src/index.js"
   }
 }
