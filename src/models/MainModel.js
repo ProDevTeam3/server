@@ -1,11 +1,6 @@
 const { Schema, model } = require('mongoose');
 import {countries} from './countries'
-/*
-const isEmail = function(email) {
-    var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    return re.test(email)
-};
-*/
+
 const isSex = function(sex) {
     if(sex === "M" || sex === "K"){
         return true
