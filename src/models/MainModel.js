@@ -1,9 +1,9 @@
-import {accomodationSchema} from './accomodationModel'
-import {additional_infoSchema} from './additional_infoModel'
-import {addressSchema} from './addressModel'
-import {companyScheme} from './companyModel'
-import {familySchema} from './familyModel'
-import {isEducation, isMartialStatus, isPesel, isSex} from './Validators'
+import { accomodationSchema } from './accomodationModel'
+import { additional_infoSchema } from './additional_infoModel'
+import { addressSchema } from './addressModel'
+import { companyScheme } from './companyModel'
+import { familySchema } from './familyModel'
+import { isEducation, isMartialStatus, isPesel, isSex } from './Validators'
 
 
 
@@ -64,4 +64,4 @@ const mainSchema = new Schema({
     ]
 });
 
-module.exports = model('Main', mainSchema);
+export default model('Main', mainSchema);
