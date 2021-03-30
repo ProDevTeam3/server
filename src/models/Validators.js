@@ -1,6 +1,5 @@
 import { countries } from "./countries";
 
-
 const isSex = (sex) => sex === "M" || sex === "K";
 const isPesel = (pesel) => pesel.toString().length() === 12;
 const isMartialStatus = (status) => {
