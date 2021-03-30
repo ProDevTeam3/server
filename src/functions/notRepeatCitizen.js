@@ -3,4 +3,5 @@ const notRepeatCitizen = async (pesel, person) => {
     return checkOfResult.length === 0 ? true : false;
 };
 
+// Uwaga funkcja zwraca promise.
 module.exports = notRepeatCitizen;
