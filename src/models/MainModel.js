@@ -47,4 +47,4 @@ const mainSchema = new Schema({
   additional_info: [additional_infoSchema],
 });
 
-module.exports = model("Main", mainSchema);
+export default model("Main", mainSchema);
