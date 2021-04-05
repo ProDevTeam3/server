@@ -1,11 +1,16 @@
+import { Schema, model } from "mongoose";
 import { isPesel, isSex } from "./Validators";
+
 const familySchema = new Schema({
   type: {
     type: String,
   },
   PESEL: {
-    type: Int32Array,
-    validate: [isPesel, "Enter correct PESEL CODE"],
+    type: String,
+    validate: {
+      validator: isPesel,
+      message: "Enter correct PESEL",
+    },
   },
   date_of_birth: {
     type: Date,
@@ -13,7 +18,10 @@ const familySchema = new Schema({
   sex: {
     type: String,
     required: [true, "Enter sex type"],
-    validate: [isSex, "Enter correct sex"],
+    validate: {
+      validator: isSex,
+      message: "Enter correct sex",
+    },
   },
 });
-export default familySchema;
+export default model("Family", familySchema);

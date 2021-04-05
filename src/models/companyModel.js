@@ -1,6 +1,7 @@
+import { Schema, model } from "mongoose";
 import { contractScheme } from "./contractModel";
 
-const companyScheme = new Schema({
+const companySchema = new Schema({
   name: {
     type: String,
   },
@@ -9,4 +10,4 @@ const companyScheme = new Schema({
   },
   contract: [contractScheme],
 });
-export default companyScheme;
+export default model("Company", companySchema);

@@ -1,15 +1,17 @@
+import { Schema, model } from "mongoose";
+
 const additional_infoSchema = new Schema({
   internet_access: {
     type: Boolean,
   },
   family_income: {
-    type: Int32Array,
+    type: Number,
   },
   num_of_cars_in_family: {
-    type: Int8Array,
+    type: Number,
   },
   disability: {
     type: String || null,
   },
 });
-export default additional_infoSchema;
+export default model("Additional_info", additional_infoSchema);

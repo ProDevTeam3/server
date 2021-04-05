@@ -1,6 +1,6 @@
 import Express from "express";
 const router = Express.Router({ mergeParams: true });
-const Main = require("../models/Main");
+const Main = require("../models/MainModel");
 
 router.post("/addCitizen", async (req, res) => {
   try {
