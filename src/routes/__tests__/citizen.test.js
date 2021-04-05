@@ -1,5 +1,5 @@
-var request = require("supertest");
-import citizen from "./routes/citizen";
+import request from "supertest";
+import app from "../../index";
 
 test("POST /addCitizen", async () => {
   const data = {
@@ -69,7 +69,7 @@ test("POST /addCitizen", async () => {
     },
   };
 
-  await supertest(app)
+  await request(app)
     .post("/addCitizen")
     .send(data)
     .expect(200)
