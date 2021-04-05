@@ -2,7 +2,7 @@ var request = require("supertest");
 import citizen from "./routes/citizen";
 
 test("POST /addCitizen", async () => {
-	const data = {
+  const data = {
     first_name: "john",
     middle_name: null,
     surname: "Kowalski",
@@ -66,23 +66,23 @@ test("POST /addCitizen", async () => {
       family_income: 90000,
       num_of_cars_in_family: 2,
       disability: null,
-    }
-	}
+    },
+  };
 
-	await supertest(app)
-		.post("/addCitizen")
-		.send(data)
-		.expect(200)
-		.then(async (response) => {
-			// Check the response
-			expect(response.body._id).toBeTruthy()
-			// expect(response.body.title).toBe(data.title)
-			// expect(response.body.content).toBe(data.content)
+  await supertest(app)
+    .post("/addCitizen")
+    .send(data)
+    .expect(200)
+    .then(async (response) => {
+      // Check the response
+      expect(response.body._id).toBeTruthy();
+      // expect(response.body.title).toBe(data.title)
+      // expect(response.body.content).toBe(data.content)
 
-			// Check the data in the database
-			const post = await Post.findOne({ _id: response.body._id })
-			expect(post).toBeTruthy()
-			expect(post.first_name).toBe(data.first_name)
-			expect(post.surname).toBe(data.surname)
-		})
-})
+      // Check the data in the database
+      const post = await Post.findOne({ _id: response.body._id });
+      expect(post).toBeTruthy();
+      expect(post.first_name).toBe(data.first_name);
+      expect(post.surname).toBe(data.surname);
+    });
+});
