@@ -18,16 +18,15 @@ const mainSchema = new Schema({
     required: [true, "Enter sex type"],
     validate: {
       validator: isSex,
-      message: "Enter correct sex"
-    }
+      message: "Enter correct sex",
+    },
   },
   PESEL: {
     type: String,
     validate: {
       validator: isPesel,
-      message: "Enter correct PESEL CODE"
-    }
-    
+      message: "Enter correct PESEL CODE",
+    },
   },
   date_of_birth: {
     type: Date,
@@ -36,22 +35,22 @@ const mainSchema = new Schema({
     type: String,
     validate: {
       validator: isMartialStatus,
-      message: "Enter correct Martial Status"
-    }
+      message: "Enter correct Martial Status",
+    },
   },
   education: {
     type: String,
     validate: {
       validator: isEducation,
-      message: "Enter correct education status"
-    }
+      message: "Enter correct education status",
+    },
   },
-  home_address: {type: Schema.Types.ObjectId, ref: 'Address'},
-  registered_address: {type: Schema.Types.ObjectId, ref: 'Address'},
-  company: {type: Schema.Types.ObjectId, ref: 'Company'},
-  family: {type: Schema.Types.ObjectId, ref: 'Family'},
-  accomodation: {type: Schema.Types.ObjectId, ref: 'Accomodation'},
-  additional_info: {type: Schema.Types.ObjectId, ref: 'Additional_info'}
+  home_address: { type: Schema.Types.ObjectId, ref: "Address" },
+  registered_address: { type: Schema.Types.ObjectId, ref: "Address" },
+  company: { type: Schema.Types.ObjectId, ref: "Company" },
+  family: { type: Schema.Types.ObjectId, ref: "Family" },
+  accomodation: { type: Schema.Types.ObjectId, ref: "Accomodation" },
+  additional_info: { type: Schema.Types.ObjectId, ref: "Additional_info" },
 });
 
 export default model("Main", mainSchema);

@@ -10,7 +10,7 @@ const accomodationSchema = new Schema({
     required: [true, "Pass number of residents in ACCOMODATION"],
   },
   house_type: {
-    type: String, 
+    type: String,
     required: [true, "Pass type of house (required!)"],
   },
 });

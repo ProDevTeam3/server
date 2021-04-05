@@ -47,11 +47,11 @@ const isCountry = (countryName) =>
 // };
 
 module.exports = {
-    isVoideShip,
-    isCountry,
-    isPostal,
-    isEducation,
-    isMartialStatus,
-    isPesel,
-    isSex,
-  };
+  isVoideShip,
+  isCountry,
+  isPostal,
+  isEducation,
+  isMartialStatus,
+  isPesel,
+  isSex,
+};

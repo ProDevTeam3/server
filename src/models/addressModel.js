@@ -9,7 +9,7 @@ const addressSchema = new Schema({
     type: String,
     validate: {
       validator: isPostal,
-      message: "Enter correct postal code"
+      message: "Enter correct postal code",
     },
     required: [true, "Postal code is required !"],
   },
@@ -29,7 +29,7 @@ const addressSchema = new Schema({
     type: String,
     validate: {
       validator: isVoideShip,
-      message: "Enter correct voivodeship !"
+      message: "Enter correct voivodeship !",
     },
     required: [true, "City possition is required !"],
   },
@@ -37,7 +37,7 @@ const addressSchema = new Schema({
     type: String,
     validate: {
       validator: isCountry,
-      message: "Enter correct country name"
+      message: "Enter correct country name",
     },
     required: [true, "Enter country name"],
   },

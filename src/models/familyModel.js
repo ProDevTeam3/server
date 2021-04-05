@@ -9,8 +9,8 @@ const familySchema = new Schema({
     type: String,
     validate: {
       validator: isPesel,
-      message: "Enter correct PESEL"
-    }
+      message: "Enter correct PESEL",
+    },
   },
   date_of_birth: {
     type: Date,
@@ -20,8 +20,8 @@ const familySchema = new Schema({
     required: [true, "Enter sex type"],
     validate: {
       validator: isSex,
-      message: "Enter correct sex"
-    }
+      message: "Enter correct sex",
+    },
   },
 });
 export default model("Family", familySchema);
