@@ -1,18 +1,18 @@
 import { countries } from "./countries";
 
-const isSex = (sex) => sex === "M" || sex === "K";
+export const isSex = (sex) => sex === "M" || sex === "K";
 
-const isPesel = (pesel) => pesel.toString().length() === 12;
-const isMartialStatus = (status) => {
+export const isPesel = (pesel) => pesel.toString().length() === 12;
+export const isMartialStatus = (status) => {
   const statuses = ["ŻONATY", "MĘŻATKA", "KAWALER", "PANNA"];
   return statuses.includes(status);
 };
-const isEducation = (edu) => {
+export const isEducation = (edu) => {
   const educs = ["PODSTAWOWE", "ŚREDNIE", "WYŻSZE"];
   return educs.includes(edu);
 };
-const isPostal = (code) => code.length() === 6;
-const isVoideShip = (voide) => {
+export const isPostal = (code) => code.length() === 6;
+export const isVoideShip = (voide) => {
   const voides = [
     "dolnośląskie",
     "kujawsko-pomorskie",
@@ -33,25 +33,5 @@ const isVoideShip = (voide) => {
   ];
   return voides.includes(voide);
 };
-const isCountry = (countryName) =>
+export const isCountry = (countryName) =>
   !!countries.find((country) => country.name === countryName);
-
-// export default {
-//   isVoideShip,
-//   isCountry,
-//   isPostal,
-//   isEducation,
-//   isMartialStatus,
-//   isPesel,
-//   isSex,
-// };
-
-module.exports = {
-  isVoideShip,
-  isCountry,
-  isPostal,
-  isEducation,
-  isMartialStatus,
-  isPesel,
-  isSex,
-};
