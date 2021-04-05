@@ -1,12 +1,14 @@
-const contractScheme = new Schema({
+import { Schema, model } from "mongoose";
+
+const contractSchema = new Schema({
   type: {
     type: String,
   },
   income: {
-    type: Int32Array,
+    type: Number,
   },
   currency: {
     type: String,
   },
 });
-export default contractScheme;
+export default model("Contract", contractSchema);

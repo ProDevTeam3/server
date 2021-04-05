@@ -28,6 +28,7 @@
     "start": "nodemon --exec babel-node src/index.js",
     "lint": "prettier --write .",
     "lint:check": "prettier --check .",
-    "test": "jest"
+    "test": "jest",
+    "prod": "node out/index.js"
   }
 }
