@@ -1,6 +1,7 @@
 FROM node:alpine
-WORKDIR /api
-COPY package.json .
+WORKDIR /opt/server
+COPY ./package.json .
 RUN yarn install
 COPY . .
-CMD ["yarn", "start"]
+RUN yarn babel
+CMD ["yarn", "prod"]
