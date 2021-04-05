@@ -1,6 +1,7 @@
 import { countries } from "./countries";
 
 const isSex = (sex) => sex === "M" || sex === "K";
+
 const isPesel = (pesel) => pesel.toString().length() === 12;
 const isMartialStatus = (status) => {
   const statuses = ["ŻONATY", "MĘŻATKA", "KAWALER", "PANNA"];
@@ -35,12 +36,22 @@ const isVoideShip = (voide) => {
 const isCountry = (countryName) =>
   !!countries.find((country) => country.name === countryName);
 
-export default {
-  isVoideShip,
-  isCountry,
-  isPostal,
-  isEducation,
-  isMartialStatus,
-  isPesel,
-  isSex,
-};
+// export default {
+//   isVoideShip,
+//   isCountry,
+//   isPostal,
+//   isEducation,
+//   isMartialStatus,
+//   isPesel,
+//   isSex,
+// };
+
+module.exports = {
+    isVoideShip,
+    isCountry,
+    isPostal,
+    isEducation,
+    isMartialStatus,
+    isPesel,
+    isSex,
+  };

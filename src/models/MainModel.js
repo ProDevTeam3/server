@@ -1,11 +1,5 @@
-import { accomodationSchema } from "./accomodationModel";
-import { additional_infoSchema } from "./additional_infoModel";
-import { addressSchema } from "./addressModel";
-import { companyScheme } from "./companyModel";
-import { familySchema } from "./familyModel";
 import { isEducation, isMartialStatus, isPesel, isSex } from "./Validators";
-
-const { Schema, model } = require("mongoose");
+import { Schema, model } from "mongoose";
 
 const mainSchema = new Schema({
   first_name: {
@@ -22,29 +16,42 @@ const mainSchema = new Schema({
   sex: {
     type: String,
     required: [true, "Enter sex type"],
-    validate: [isSex, "Enter correct sex"],
+    validate: {
+      validator: isSex,
+      message: "Enter correct sex"
+    }
   },
   PESEL: {
-    type: Int32Array,
-    validate: [isPesel, "Enter correct PESEL CODE"],
+    type: String,
+    validate: {
+      validator: isPesel,
+      message: "Enter correct PESEL CODE"
+    }
+    
   },
   date_of_birth: {
     type: Date,
   },
   marital_status: {
     type: String,
-    validate: [isMartialStatus, "Enter correct Martial Status"],
+    validate: {
+      validator: isMartialStatus,
+      message: "Enter correct Martial Status"
+    }
   },
   education: {
     type: String,
-    validate: [isEducation, "Enter correct education status"],
+    validate: {
+      validator: isEducation,
+      message: "Enter correct education status"
+    }
   },
-  home_address: [addressSchema],
-  registered_address: [addressSchema],
-  company: [companyScheme],
-  family: [familySchema],
-  accomodation: [accomodationSchema],
-  additional_info: [additional_infoSchema],
+  home_address: {type: Schema.Types.ObjectId, ref: 'Address'},
+  registered_address: {type: Schema.Types.ObjectId, ref: 'Address'},
+  company: {type: Schema.Types.ObjectId, ref: 'Company'},
+  family: {type: Schema.Types.ObjectId, ref: 'Family'},
+  accomodation: {type: Schema.Types.ObjectId, ref: 'Accomodation'},
+  additional_info: {type: Schema.Types.ObjectId, ref: 'Additional_info'}
 });
 
 export default model("Main", mainSchema);

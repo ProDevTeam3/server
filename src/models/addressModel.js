@@ -1,11 +1,16 @@
+import { Schema, model } from "mongoose";
 import { isVoideShip, isCountry, isPostal } from "./Validators";
+
 const addressSchema = new Schema({
   street: {
     type: String,
   },
   postal_code: {
     type: String,
-    validate: [isPostal, "Enter correct postal code"],
+    validate: {
+      validator: isPostal,
+      message: "Enter correct postal code"
+    },
     required: [true, "Postal code is required !"],
   },
   city: {
@@ -22,13 +27,19 @@ const addressSchema = new Schema({
   },
   voivodeship: {
     type: String,
-    validate: [isVoideShip, "Enter correct voivodeship !"],
+    validate: {
+      validator: isVoideShip,
+      message: "Enter correct voivodeship !"
+    },
     required: [true, "City possition is required !"],
   },
   country: {
     type: String,
-    validate: [isCountry, "Enter correct country name"],
+    validate: {
+      validator: isCountry,
+      message: "Enter correct country name"
+    },
     required: [true, "Enter country name"],
   },
 });
-export default addressSchema;
+export default model("Address", addressSchema);
