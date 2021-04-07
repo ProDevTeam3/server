@@ -1,4 +1,5 @@
 import Express from "express";
+import regeneratorRuntime from "regenerator-runtime";
 const router = Express.Router({ mergeParams: true });
 const Main = require("../models/MainModel");
 
