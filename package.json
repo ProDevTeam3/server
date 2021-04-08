@@ -23,7 +23,7 @@
   },
   "scripts": {
     "babel": "babel src -d out",
-    "start": "nodemon --exec babel-node src/index.js",
+    "start": "nodemon --legacy-watch --exec babel-node src/index.js",
     "lint": "prettier --write .",
     "lint:check": "prettier --check .",
     "prod": "node out/index.js"
