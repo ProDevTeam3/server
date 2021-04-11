@@ -32,6 +32,7 @@ jobs:
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
   restart-server:
+      needs: docker
       name: Connect and restart
       runs-on: ubuntu-latest
       steps:
