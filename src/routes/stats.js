@@ -5,7 +5,9 @@ const Main = require("../models/MainModel");
 
 router.get("/nationalityByRegion", async (req, res) => {
   try {
-    const citizens = await Main.find().populate('home_address registered_address')
+    const citizens = await Main.find().populate(
+      "home_address registered_address"
+    );
 
     const regions = citizens.reduce((citizen, accumulator) => {
       // const result = await Main.aggregate([
@@ -24,41 +26,42 @@ router.get("/nationalityByRegion", async (req, res) => {
       //   }
       // ])
 
-      const region = citizen.registered_address.voivodeship
-      const nationality = citizen.home_address.country
+      const region = citizen.registered_address.voivodeship;
+      const nationality = citizen.home_address.country;
 
-      const isRegionPresent = !!accumulator[regions]
-      const isNationalityPresent = isRegionPresent ? !!accumulator[regions][nationality] : false
+      const isRegionPresent = !!accumulator[regions];
+      const isNationalityPresent = isRegionPresent
+        ? !!accumulator[regions][nationality]
+        : false;
 
-      if(isRegionPresent) {
-        if(isNationalityPresent) {
+      if (isRegionPresent) {
+        if (isNationalityPresent) {
           return {
             ...accumulator,
             [region]: {
               ...accumulator[region],
-              [nationality]: accumulator[region][nationality]+1
-            }
-          }
+              [nationality]: accumulator[region][nationality] + 1,
+            },
+          };
         } else {
           return {
             ...accumulator,
             [region]: {
               ...accumulator[region],
-              [nationality]: 1
-            }
-          }
+              [nationality]: 1,
+            },
+          };
         }
       } else {
         return {
           ...accumulator,
           [region]: {
-            [nationality]: 1
-          }
-        }
+            [nationality]: 1,
+          },
+        };
       }
-    }, {})
-    return res.json({regions})
-
+    }, {});
+    return res.json({ regions });
   } catch (error) {
     return res.json({ errorMessage: error });
   }
