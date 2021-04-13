@@ -10,5 +10,14 @@ const contractSchema = new Schema({
   currency: {
     type: String,
   },
+  branch: {
+    type: String,
+  },
+  name: {
+    type: String,
+  },
+  NIP: {
+    type: String,
+  }
 });
 export default model("Contract", contractSchema);

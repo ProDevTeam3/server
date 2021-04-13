@@ -47,8 +47,8 @@ const mainSchema = new Schema({
   },
   home_address: { type: Schema.Types.ObjectId, ref: "Address" },
   registered_address: { type: Schema.Types.ObjectId, ref: "Address" },
-  company: { type: Schema.Types.ObjectId, ref: "Company" },
-  family: { type: Schema.Types.ObjectId, ref: "Family" },
+  contract: [{ type: Schema.Types.ObjectId, ref: "Contract" }],
+  family: [{ type: Schema.Types.ObjectId, ref: "Family" }],
   accomodation: { type: Schema.Types.ObjectId, ref: "Accomodation" },
   additional_info: { type: Schema.Types.ObjectId, ref: "Additional_info" },
 });
