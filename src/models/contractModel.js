@@ -18,6 +18,6 @@ const contractSchema = new Schema({
   },
   NIP: {
     type: String,
-  }
+  },
 });
 export default model("Contract", contractSchema);
