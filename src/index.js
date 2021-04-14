@@ -4,7 +4,6 @@ import config from "../config.js";
 import citizen from "./routes/citizen";
 import contract from "./routes/contract";
 
-
 const app = express();
 
 app.use(cors());

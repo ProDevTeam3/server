@@ -4,22 +4,31 @@ const router = Express.Router({ mergeParams: true });
 import Main from "../models/MainModel";
 
 router.get("/", async (req, res) => {
-    try {
-        const result = await Main.aggregate()
-            .lookup({ from: 'contracts', localField: 'contract', foreignField: '_id', as: 'contract' })
-            .project({ "_id": 0, "contract": "$contract.type" })
-            .unwind("$contract")
-            .group({ '_id': '$contract', type: { $first: '$contract' }, count: { $sum: 1 } });
+  try {
+    const result = await Main.aggregate()
+      .lookup({
+        from: "contracts",
+        localField: "contract",
+        foreignField: "_id",
+        as: "contract",
+      })
+      .project({ _id: 0, contract: "$contract.type" })
+      .unwind("$contract")
+      .group({
+        _id: "$contract",
+        type: { $first: "$contract" },
+        count: { $sum: 1 },
+      });
 
-        res.send(result);
-    } catch (error) {
-        res.send("error" + error);
-    }
+    res.send(result);
+  } catch (error) {
+    res.send("error" + error);
+  }
 });
 export default router;
 
 // Zwracany wynik przykład
-// result = 
+// result =
 // [
 //     {
 //         "_id": "Umowa o dzieło",
