@@ -43,39 +43,39 @@ router.post("/addCitizen", async (req, res) => {
       const idContracts =
         contract !== null
           ? contract.map(async (contract) => {
-            if (await notRepeat(contract, Contract)) {
-              await Contract.create(contract);
-            }
-            const findContract = await Contract.find(contract);
-            const idContract = await findContract[0]["_id"];
-            return idContract;
-          })
+              if (await notRepeat(contract, Contract)) {
+                await Contract.create(contract);
+              }
+              const findContract = await Contract.find(contract);
+              const idContract = await findContract[0]["_id"];
+              return idContract;
+            })
           : null;
       // Znalezienie id dla umów
       if (idContracts !== null) {
         for (let index = 0; index < idContracts.length; index++) {
           idContracts[index] = await idContracts[index];
         }
-      };
+      }
 
       // Sprawdzenie czy członkowie rodziny już istniejeją, jeśli nie to zostaną utworzeni
       const idPeopleOfFamily =
         family !== null
           ? family.map(async (person) => {
-            if (await notRepeatCitizen(person.PESEL, Family)) {
-              await Family.create(person);
-            }
-            const findPerson = await Family.find(person);
-            const idPerson = await findPerson[0]["_id"];
-            return idPerson;
-          })
+              if (await notRepeatCitizen(person.PESEL, Family)) {
+                await Family.create(person);
+              }
+              const findPerson = await Family.find(person);
+              const idPerson = await findPerson[0]["_id"];
+              return idPerson;
+            })
           : null;
       // Znalezienie id członków rodziny
       if (idPeopleOfFamily !== null) {
         for (let index = 0; index < idPeopleOfFamily.length; index++) {
           idPeopleOfFamily[index] = await idPeopleOfFamily[index];
         }
-      };
+      }
 
       // Sprawdzenie czy zakwaterowanie już istnieje, jeśli nie to zostanie utworzone
       if (await notRepeat(accomodation, Accomodation)) {
