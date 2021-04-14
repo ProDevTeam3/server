@@ -35,10 +35,10 @@ const addressSchema = new Schema({
   },
   country: {
     type: String,
-    // validate: {
-    // validator: isCountry,
-    // message: "Enter correct country name",
-    // },
+    validate: {
+      validator: isCountry,
+      message: "Enter correct country name",
+    },
     required: [true, "Enter country name"],
   },
 });

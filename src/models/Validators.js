@@ -34,4 +34,4 @@ export const isVoideShip = (voide) => {
   return voides.includes(voide);
 };
 export const isCountry = (countryName) =>
-  !!countries.find((country) => country.name === countryName);
+  !!countries.find((country) => country.name_pl === countryName);
