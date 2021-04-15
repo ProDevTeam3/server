@@ -89,15 +89,15 @@ router.post("/addCitizen", async (req, res) => {
           for (let index = 0; index < family.length; index++) {
             if (await notRepeatCitizen(family[index].PESEL, Family)) {
               await Family.create(family[index]);
-            };
+            }
             // Znalezienie id członka rodzinny
             const findPerson = await Family.find({
               PESEL: family[index].PESEL,
             });
             family[index] = await findPerson[0]["_id"];
-          };
-        };
-      };
+          }
+        }
+      }
 
       // Sprawdzenie czy zakwaterowanie już istnieje, jeśli nie to zostanie utworzone
       if (await notRepeat(accomodation, Accomodation)) {
