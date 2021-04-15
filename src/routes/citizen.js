@@ -83,28 +83,21 @@ router.post("/addCitizen", async (req, res) => {
         notRepeatFamily.length !== family.length ||
         notRepeatFamily.includes(PESEL)
       ) {
-        res.send("Enter appropriate PESELE in family");
+        return res.send("Enter appropriate PESELE in family");
       } else {
         if (family.length > 0) {
           for (let index = 0; index < family.length; index++) {
             if (await notRepeatCitizen(family[index].PESEL, Family)) {
               await Family.create(family[index]);
-            }
+            };
+            // Znalezienie id członka rodzinny
             const findPerson = await Family.find({
               PESEL: family[index].PESEL,
             });
             family[index] = await findPerson[0]["_id"];
-          }
-        }
-      }
-      // Znalezienie id członków rodzinny
-      const idPeopleOfFamily = family.reduce((total, amount) => {
-        return !total
-          .map((element) => element.toString())
-          .includes(amount.toString())
-          ? [...total, amount]
-          : total;
-      }, []);
+          };
+        };
+      };
 
       // Sprawdzenie czy zakwaterowanie już istnieje, jeśli nie to zostanie utworzone
       if (await notRepeat(accomodation, Accomodation)) {
@@ -128,7 +121,6 @@ router.post("/addCitizen", async (req, res) => {
         home_address: idHomeAdress,
         registered_address: idRegistredAdress,
         contract: idContracts,
-        family: idPeopleOfFamily,
         accomodation: idAccomodation,
         additional_info: idAdditionalInfo,
       });
