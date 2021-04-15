@@ -8,22 +8,6 @@ router.get("/nationalityByRegion", async (req, res) => {
     const citizens = await Main.find().populate("registered_address");
 
     const regions = citizens.reduce((citizen, accumulator) => {
-      // const result = await Main.aggregate([
-      //   {
-      //     $unwind: {path: '$home_address'}
-      //   },
-      //   {
-      //     $unwind: {path: '$registered_address'}
-      //   },
-      //   {
-      //     $group: {
-      //       _id: null,
-      //       citizens: {$sum: 1},
-      //       region: {$first: '$'}
-      //     }
-      //   }
-      // ])
-
       const region = citizen.registered_address.voivodeship;
       const nationality = citizen.nationality;
 
