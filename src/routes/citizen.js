@@ -40,11 +40,10 @@ router.post("/addCitizen", async (req, res) => {
       const findRegistredAdress = await Address.find(registered_address);
       const idRegistredAdress = findRegistredAdress[0]["_id"];
 
-
       // Szukanie id kontraktów i firm
       if (company.length > 0) {
         for (let index = 0; index < company.length; index++) {
-          const { name, NIP, industry, contract } = company[index]
+          const { name, NIP, industry, contract } = company[index];
           const dataCompany = { name: name, NIP: NIP, industry: industry };
           // Sprawdzenie czy firma już istnieje, jeśli nie to zostanie utworzona
           if (await notRepeat(dataCompany, Company)) {
@@ -60,15 +59,15 @@ router.post("/addCitizen", async (req, res) => {
               // Sprawdzenie czy kontrakt już istnieje, jeśli nie to zostanie utworzony
               if (await notRepeat(dataContract, Contract)) {
                 await Contract.create(dataContract);
-              };
+              }
               // Znalezienie id kontraktu
               const findContract = await Contract.find(dataContract);
               contract[index] = await findContract[0]["_id"];
-            };
+            }
             company[index] = contract;
-          };
-        };
-      };
+          }
+        }
+      }
 
       // Znalezienie id dla kontraktów
       const idContracts = await company.reduce((total, amount) => {
@@ -76,32 +75,36 @@ router.post("/addCitizen", async (req, res) => {
       }, []);
 
       const notRepeatFamily = family.reduce((total, amount) => {
-        return !total.includes(amount.PESEL) ? [...total, amount.PESEL] : total
+        return !total.includes(amount.PESEL) ? [...total, amount.PESEL] : total;
       }, []);
 
       // Sprawdzenie czy członkowie rodziny już istniejeją, jeśli nie to zostaną utworzeni
-      if (notRepeatFamily.length !== family.length || notRepeatFamily.includes(PESEL)) {
+      if (
+        notRepeatFamily.length !== family.length ||
+        notRepeatFamily.includes(PESEL)
+      ) {
         res.send("Enter appropriate PESELE in family");
       } else {
         if (family.length > 0) {
           for (let index = 0; index < family.length; index++) {
             if (await notRepeatCitizen(family[index].PESEL, Family)) {
               await Family.create(family[index]);
-            };
-            const findPerson = await Family.find({ PESEL: family[index].PESEL });
+            }
+            const findPerson = await Family.find({
+              PESEL: family[index].PESEL,
+            });
             family[index] = await findPerson[0]["_id"];
           }
-        };
-      };
+        }
+      }
       // Znalezienie id członków rodzinny
-      const idPeopleOfFamily = family.reduce(
-        (total, amount) => {
-          return !total.map((element) => element.toString()).includes(amount.toString())
-            ? [...total, amount]
-            : total;
-        },
-        []
-      );
+      const idPeopleOfFamily = family.reduce((total, amount) => {
+        return !total
+          .map((element) => element.toString())
+          .includes(amount.toString())
+          ? [...total, amount]
+          : total;
+      }, []);
 
       // Sprawdzenie czy zakwaterowanie już istnieje, jeśli nie to zostanie utworzone
       if (await notRepeat(accomodation, Accomodation)) {
