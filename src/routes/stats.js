@@ -5,9 +5,7 @@ const Main = require("../models/MainModel");
 
 router.get("/nationalityByRegion", async (req, res) => {
   try {
-    const citizens = await Main.find().populate(
-      "home_address registered_address"
-    );
+    const citizens = await Main.find().populate("registered_address");
 
     const regions = citizens.reduce((citizen, accumulator) => {
       // const result = await Main.aggregate([
@@ -27,7 +25,7 @@ router.get("/nationalityByRegion", async (req, res) => {
       // ])
 
       const region = citizen.registered_address.voivodeship;
-      const nationality = citizen.home_address.country;
+      const nationality = citizen.nationality;
 
       const isRegionPresent = !!accumulator[regions];
       const isNationalityPresent = isRegionPresent
