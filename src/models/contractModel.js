@@ -10,14 +10,6 @@ const contractSchema = new Schema({
   currency: {
     type: String,
   },
-  branch: {
-    type: String,
-  },
-  name: {
-    type: String,
-  },
-  NIP: {
-    type: String,
-  },
+  company: { type: Schema.Types.ObjectId, ref: "Company" }
 });
 export default model("Contract", contractSchema);

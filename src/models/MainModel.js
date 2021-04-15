@@ -13,6 +13,10 @@ const mainSchema = new Schema({
     type: String,
     required: [true, "Enter Appropriate Surname"],
   },
+  nationality: {
+    type: String,
+    required: [true, "Enter Appropriate Surname"],
+  },
   sex: {
     type: String,
     required: [true, "Enter sex type"],
