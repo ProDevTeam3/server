@@ -4,14 +4,18 @@ import { Schema, model } from "mongoose";
 const mainSchema = new Schema({
   first_name: {
     type: String,
-    required: [true, "Enter Appropriate First Name"],
+    required: [true, "Enter appropriate first Name"],
   },
   middle_name: {
     type: String,
   },
   surname: {
     type: String,
-    required: [true, "Enter Appropriate Surname"],
+    required: [true, "Enter appropriate surname"],
+  },
+  nationality: {
+    type: String,
+    required: [true, "Enter appropriate nationality"],
   },
   sex: {
     type: String,
@@ -47,8 +51,8 @@ const mainSchema = new Schema({
   },
   home_address: { type: Schema.Types.ObjectId, ref: "Address" },
   registered_address: { type: Schema.Types.ObjectId, ref: "Address" },
-  company: { type: Schema.Types.ObjectId, ref: "Company" },
-  family: { type: Schema.Types.ObjectId, ref: "Family" },
+  contract: [{ type: Schema.Types.ObjectId, ref: "Contract" }],
+  family: [{ type: Schema.Types.ObjectId, ref: "Family" }],
   accomodation: { type: Schema.Types.ObjectId, ref: "Accomodation" },
   additional_info: { type: Schema.Types.ObjectId, ref: "Additional_info" },
 });

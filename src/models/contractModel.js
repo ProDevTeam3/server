@@ -10,5 +10,6 @@ const contractSchema = new Schema({
   currency: {
     type: String,
   },
+  company: { type: Schema.Types.ObjectId, ref: "Company" },
 });
 export default model("Contract", contractSchema);

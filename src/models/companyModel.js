@@ -1,5 +1,4 @@
 import { Schema, model } from "mongoose";
-import { contractScheme } from "./contractModel";
 
 const companySchema = new Schema({
   name: {
@@ -8,6 +7,8 @@ const companySchema = new Schema({
   NIP: {
     type: String,
   },
-  contract: [contractScheme],
+  industry: {
+    type: String,
+  },
 });
 export default model("Company", companySchema);

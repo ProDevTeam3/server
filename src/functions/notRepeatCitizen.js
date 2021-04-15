@@ -1,6 +1,6 @@
-export const notRepeatCitizen = async (pesel, person) => {
-  const checkOfResult = await person.find({ PESEL: pesel });
-  return checkOfResult.length;
+export const notRepeatCitizen = async (pesel, model) => {
+  const checkOfResult = await model.find({ PESEL: pesel });
+  return checkOfResult.length === 0;
 };
 
 // Uwaga funkcja zwraca promise.
