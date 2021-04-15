@@ -27,7 +27,7 @@ router.post("/addCitizen", async (req, res) => {
       // Sprawdzenie czy adres domowy już istnieje, jeśli nie to zostanie utworzony
       if (await notRepeat(home_address, Address)) {
         await Address.create(home_address);
-      };
+      }
       // Znalezienie id dla adresu domowego
       const findHomeAdress = await Address.find(home_address);
       const idHomeAdress = findHomeAdress[0]["_id"];
@@ -35,43 +35,46 @@ router.post("/addCitizen", async (req, res) => {
       // Sprawdzenie czy adres zameldowania już istnieje, jeśli nie to zostanie utworzony
       if (await notRepeat(registered_address, Address)) {
         await Address.create(registered_address);
-      };
+      }
       // Znalezienie id dla adresu zameldowania
       const findRegistredAdress = await Address.find(registered_address);
       const idRegistredAdress = findRegistredAdress[0]["_id"];
 
-
       // Szukanie id kontraktów i firm
-      const findIdContracts = await company.length > 0 ?
-        company.map(async ({ name, NIP, industry, contract }) => {
-          const dataCompany = { name: name, NIP: NIP, industry: industry };
-          // Sprawdzenie czy firma już istnieje, jeśli nie to zostanie utworzona
-          if (await notRepeat(dataCompany, Company)) {
-            await Company.create(dataCompany);
-          };
-          // Znalezienie id firmy
-          const findCompany = await Company.find(dataCompany);
-          const idCompany = await findCompany[0]["_id"];
-          return contract.length > 0 ? contract.map(async contract => {
-            const dataContract = { ...contract, company: idCompany };
+      const findIdContracts =
+        (await company.length) > 0
+          ? company.map(async ({ name, NIP, industry, contract }) => {
+              const dataCompany = { name: name, NIP: NIP, industry: industry };
+              // Sprawdzenie czy firma już istnieje, jeśli nie to zostanie utworzona
+              if (await notRepeat(dataCompany, Company)) {
+                await Company.create(dataCompany);
+              }
+              // Znalezienie id firmy
+              const findCompany = await Company.find(dataCompany);
+              const idCompany = await findCompany[0]["_id"];
+              return contract.length > 0
+                ? contract.map(async (contract) => {
+                    const dataContract = { ...contract, company: idCompany };
 
-            // Sprawdzenie czy kontrakt już istnieje, jeśli nie to zostanie utworzony
-            if (await notRepeat(dataContract, Contract)) {
-              await Contract.create(dataContract);
-            };
-            // Znalezienie id kontraktu
-            const findContract = await Contract.find(dataContract);
-            const idContract = await findContract[0]["_id"];
-            return idContract;
-          }) : [];
-        }) : [];
+                    // Sprawdzenie czy kontrakt już istnieje, jeśli nie to zostanie utworzony
+                    if (await notRepeat(dataContract, Contract)) {
+                      await Contract.create(dataContract);
+                    }
+                    // Znalezienie id kontraktu
+                    const findContract = await Contract.find(dataContract);
+                    const idContract = await findContract[0]["_id"];
+                    return idContract;
+                  })
+                : [];
+            })
+          : [];
 
       // Znalezienie id dla kontraktów
       if (findIdContracts.length > 0) {
         for (let index = 0; index < findIdContracts.length; index++) {
           findIdContracts[index] = await findIdContracts[index];
-        };
-      };
+        }
+      }
 
       const idContracts = await findIdContracts.reduce((total, amount) => {
         return [...total, ...amount];
@@ -79,35 +82,42 @@ router.post("/addCitizen", async (req, res) => {
 
       for (let index = 0; index < idContracts.length; index++) {
         idContracts[index] = await idContracts[index];
-      };
+      }
 
       // Sprawdzenie czy członkowie rodziny już istniejeją, jeśli nie to zostaną utworzeni
       const idPeopleOfFamily =
         family.length > 0
           ? family.map(async (person) => {
-            if (await notRepeatCitizen(person.PESEL, Family)) {
-              await Family.create(person);
-            }
-            const findPerson = await Family.find({ PESEL: person.PESEL });
-            const idPerson = await findPerson[0]["_id"];
-            return idPerson;
-          })
+              if (await notRepeatCitizen(person.PESEL, Family)) {
+                await Family.create(person);
+              }
+              const findPerson = await Family.find({ PESEL: person.PESEL });
+              const idPerson = await findPerson[0]["_id"];
+              return idPerson;
+            })
           : [];
 
       // Znalezienie id członków rodziny
       if (idPeopleOfFamily.length > 0) {
         for (let index = 0; index < idPeopleOfFamily.length; index++) {
           idPeopleOfFamily[index] = await idPeopleOfFamily[index];
-        };
-      };
-      // Na wypadek jakby ktoś dodał dwie osoby o tym samym PESELU 
-      const notRepeatIdPeopleOfFamily = idPeopleOfFamily.reduce((total, amount) => {
-        return !total.map(element => element.toString()).includes(amount.toString()) ? [...total, amount] : total
-      }, []);
+        }
+      }
+      // Na wypadek jakby ktoś dodał dwie osoby o tym samym PESELU
+      const notRepeatIdPeopleOfFamily = idPeopleOfFamily.reduce(
+        (total, amount) => {
+          return !total
+            .map((element) => element.toString())
+            .includes(amount.toString())
+            ? [...total, amount]
+            : total;
+        },
+        []
+      );
       // Sprawdzenie czy zakwaterowanie już istnieje, jeśli nie to zostanie utworzone
       if (await notRepeat(accomodation, Accomodation)) {
         await Accomodation.create(accomodation);
-      };
+      }
       // Znalezienie id zakwaterowania
       const findAccomodation = await Accomodation.find(accomodation);
       const idAccomodation = findAccomodation[0]["_id"];
@@ -115,7 +125,7 @@ router.post("/addCitizen", async (req, res) => {
       // Sprawdzenie czy dodatkowe informacje już istnieją, jeśli nie to zostaną utworzone
       if (await notRepeat(additional_info, Additional_info)) {
         await Additional_info.create(additional_info);
-      };
+      }
       // Znalezienie id dodatkowych informacji
       const findAdditionalInfo = await Additional_info.find(additional_info);
       const idAdditionalInfo = findAdditionalInfo[0]["_id"];
@@ -134,7 +144,7 @@ router.post("/addCitizen", async (req, res) => {
       res.send("Add citizen");
     } else {
       res.send("Not add citizen");
-    };
+    }
   } catch (error) {
     res.send("error" + error);
   }
