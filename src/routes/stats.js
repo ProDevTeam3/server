@@ -3,6 +3,52 @@ import regeneratorRuntime from "regenerator-runtime";
 const router = express.router({ mergeParams: true });
 const Main = require("../models/MainModel");
 
+router.get("/nationalityByRegion", async (req, res) => {
+  try {
+    const citizens = await Main.find().populate("registered_address");
+
+    const regions = citizens.reduce((citizen, accumulator) => {
+      const region = citizen.registered_address.voivodeship;
+      const nationality = citizen.nationality;
+
+      const isRegionPresent = !!accumulator[regions];
+      const isNationalityPresent = isRegionPresent
+        ? !!accumulator[regions][nationality]
+        : false;
+
+      if (isRegionPresent) {
+        if (isNationalityPresent) {
+          return {
+            ...accumulator,
+            [region]: {
+              ...accumulator[region],
+              [nationality]: accumulator[region][nationality] + 1,
+            },
+          };
+        } else {
+          return {
+            ...accumulator,
+            [region]: {
+              ...accumulator[region],
+              [nationality]: 1,
+            },
+          };
+        }
+      } else {
+        return {
+          ...accumulator,
+          [region]: {
+            [nationality]: 1,
+          },
+        };
+      }
+    }, {});
+    return res.json({ regions });
+  } catch (error) {
+    return res.json({ errorMessage: error });
+  }
+});
+
 router.get("/industryByNationality", async (req, res) => {
   try {
     const citizens = await Main.find().populate("contract").populate("company");
