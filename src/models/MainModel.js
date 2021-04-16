@@ -4,14 +4,18 @@ import { Schema, model } from "mongoose";
 const mainSchema = new Schema({
   first_name: {
     type: String,
-    required: [true, "Enter Appropriate First Name"],
+    required: [true, "Enter appropriate first Name"],
   },
   middle_name: {
     type: String,
   },
   surname: {
     type: String,
-    required: [true, "Enter Appropriate Surname"],
+    required: [true, "Enter appropriate surname"],
+  },
+  nationality: {
+    type: String,
+    required: [true, "Enter appropriate nationality"],
   },
   sex: {
     type: String,

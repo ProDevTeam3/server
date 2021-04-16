@@ -7,6 +7,7 @@ import Contract from "../models/contractModel";
 import Family from "../models/familyModel";
 import Accomodation from "../models/accomodationModel";
 import Additional_info from "../models/additional_infoModel";
+import Company from "../models/companyModel";
 import { notRepeatCitizen } from "../functions/notRepeatCitizen";
 import { notRepeat } from "../functions/notRepeat";
 
@@ -16,7 +17,7 @@ router.post("/addCitizen", async (req, res) => {
       PESEL,
       home_address,
       registered_address,
-      contract,
+      company,
       family,
       accomodation,
       additional_info,
@@ -39,41 +40,62 @@ router.post("/addCitizen", async (req, res) => {
       const findRegistredAdress = await Address.find(registered_address);
       const idRegistredAdress = findRegistredAdress[0]["_id"];
 
-      // Sprawdzenie czy umowy już istniejeją, jeśli nie to zostaną utworzone
-      const idContracts =
-        contract !== null
-          ? contract.map(async (contract) => {
-              if (await notRepeat(contract, Contract)) {
-                await Contract.create(contract);
+      // Szukanie id kontraktów i firm
+      if (company.length > 0) {
+        for (let index = 0; index < company.length; index++) {
+          const { name, NIP, industry, contract } = company[index];
+          const dataCompany = { name: name, NIP: NIP, industry: industry };
+          // Sprawdzenie czy firma już istnieje, jeśli nie to zostanie utworzona
+          if (await notRepeat(dataCompany, Company)) {
+            await Company.create(dataCompany);
+          }
+          // Znalezienie id firmy
+          const findCompany = await Company.find(dataCompany);
+          const idCompany = await findCompany[0]["_id"];
+
+          if (contract.length > 0) {
+            for (let index = 0; index < contract.length; index++) {
+              const dataContract = { ...contract[index], company: idCompany };
+              // Sprawdzenie czy kontrakt już istnieje, jeśli nie to zostanie utworzony
+              if (await notRepeat(dataContract, Contract)) {
+                await Contract.create(dataContract);
               }
-              const findContract = await Contract.find(contract);
-              const idContract = await findContract[0]["_id"];
-              return idContract;
-            })
-          : null;
-      // Znalezienie id dla umów
-      if (idContracts !== null) {
-        for (let index = 0; index < idContracts.length; index++) {
-          idContracts[index] = await idContracts[index];
+              // Znalezienie id kontraktu
+              const findContract = await Contract.find(dataContract);
+              contract[index] = await findContract[0]["_id"];
+            }
+            company[index] = contract;
+          }
         }
       }
 
+      // Znalezienie id dla kontraktów
+      const idContracts = await company.reduce((total, amount) => {
+        return [...total, ...amount];
+      }, []);
+
+      const notRepeatFamily = family.reduce((total, amount) => {
+        return !total.includes(amount.PESEL) ? [...total, amount.PESEL] : total;
+      }, []);
+
       // Sprawdzenie czy członkowie rodziny już istniejeją, jeśli nie to zostaną utworzeni
-      const idPeopleOfFamily =
-        family !== null
-          ? family.map(async (person) => {
-              if (await notRepeatCitizen(person.PESEL, Family)) {
-                await Family.create(person);
-              }
-              const findPerson = await Family.find(person);
-              const idPerson = await findPerson[0]["_id"];
-              return idPerson;
-            })
-          : null;
-      // Znalezienie id członków rodziny
-      if (idPeopleOfFamily !== null) {
-        for (let index = 0; index < idPeopleOfFamily.length; index++) {
-          idPeopleOfFamily[index] = await idPeopleOfFamily[index];
+      if (
+        notRepeatFamily.length !== family.length ||
+        notRepeatFamily.includes(PESEL)
+      ) {
+        return res.send("Enter appropriate PESELE in family");
+      } else {
+        if (family.length > 0) {
+          for (let index = 0; index < family.length; index++) {
+            if (await notRepeatCitizen(family[index].PESEL, Family)) {
+              await Family.create(family[index]);
+            }
+            // Znalezienie id członka rodzinny
+            const findPerson = await Family.find({
+              PESEL: family[index].PESEL,
+            });
+            family[index] = await findPerson[0]["_id"];
+          }
         }
       }
 
@@ -99,7 +121,6 @@ router.post("/addCitizen", async (req, res) => {
         home_address: idHomeAdress,
         registered_address: idRegistredAdress,
         contract: idContracts,
-        family: idPeopleOfFamily,
         accomodation: idAccomodation,
         additional_info: idAdditionalInfo,
       });
@@ -121,12 +142,13 @@ export default router;
 //     "first_name": "Jan",
 //       "middle_name": null,
 //         "surname": "Kowalski",
-//           "sex": "M",
-//             "PESEL": "000000000000",
-//               "date_of_birth": "2020-01-01",
-//                 "marital_status": "KAWALER",
-//                   "education": "ŚREDNIE",
-//                     "home_address": {
+//           "nationality": "Polska",
+//             "sex": "M",
+//               "PESEL": "000000000012",
+//                 "date_of_birth": "2020-01-01",
+//                   "marital_status": "KAWALER",
+//                     "education": "ŚREDNIE",
+//                       "home_address": {
 //     "street": "Polna",
 //       "postal_code": "80-000",
 //         "city": "Gdansk",
@@ -144,15 +166,25 @@ export default router;
 //               "voivodeship": "pomorskie",
 //                 "country": "Polska"
 //   },
-//   "contract": [
+//   "company": [
 //     {
-//       "type": "UOP",
-//       "income": 30000,
-//       "currency": "PLN",
-//       "branch": "budownictwo",
-//       "name": "Renault",
-//       "NIP": "999012030213"
-//     }],
+//       "name": "Renalut",
+//       "NIP": "123456789",
+//       "industry": "Samochodowy",
+//       "contract": [
+//         {
+//           "type": "Umowa o dzieło",
+//           "income": "2200",
+//           "currency": "EUR"
+//         },
+//         {
+//           "type": "Umowa o dzieło",
+//           "income": "2000",
+//           "currency": "PLN"
+//         }
+//       ]
+//     }
+//   ],
 //     "family": [
 //       {
 //         "type": "PARTNER",
