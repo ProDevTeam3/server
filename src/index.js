@@ -2,12 +2,14 @@ import cors from "cors";
 import express from "express";
 import config from "../config.js";
 import citizen from "./routes/citizen";
+import contract from "./routes/contract";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use("/citizen", citizen);
+app.use("/contract", contract);
 
 const dbConnData = {
   host: config.mongoHost,
