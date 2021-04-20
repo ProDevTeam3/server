@@ -133,7 +133,6 @@ router.post("/addCitizen", async (req, res) => {
     res.send("error" + error);
   }
 });
-export default router;
 
 // Przykład
 
@@ -187,12 +186,16 @@ export default router;
 //   ],
 //     "family": [
 //       {
+//         "name": "Ala",
+//         "surname": "Kowalska",
 //         "type": "PARTNER",
 //         "PESEL": "000000000001",
 //         "date_of_birth": "2020-01-01",
 //         "sex": "K"
 //       },
 //       {
+//         "name": "Bartosz",
+//         "surname": "Kowalski",
 //         "type": "DZIECKO",
 //         "PESEL": "000000000002",
 //         "date_of_birth": "2020-01-01",
@@ -211,3 +214,20 @@ export default router;
 //           "disability": null
 //   }
 // }
+
+router.delete("/deleteCitizen/:PESEL", async (req, res) => {
+  try {
+    const PESEL = req.params.PESEL.toString();
+    const deleteCitizen = await Main.findOneAndDelete({ PESEL: PESEL });
+
+    if (deleteCitizen === null) {
+      res.send(`Nie znaleziono osoby o PESELU: ${PESEL}`);
+    } else {
+      res.send(`Usunięto osobę o PESELU: ${PESEL}`);
+    }
+  } catch (error) {
+    res.send("error" + error);
+  }
+});
+
+export default router;
