@@ -237,12 +237,12 @@ router.get("/getCitizen/:PESEL", async (req, res) => {
   try {
     const PESEL = req.params.PESEL.toString();
     const findCitizen = await Main.findOne({ PESEL: PESEL })
-      .populate({ path: 'contract', populate: { path: "company" } })
+      .populate({ path: "contract", populate: { path: "company" } })
       .populate("family")
       .populate("home_address")
       .populate("registered_address")
       .populate("accomodation")
-      .populate("additional_info")
+      .populate("additional_info");
 
     if (findCitizen === null) {
       res.send(`Nie znaleziono obywatela o PESELU: ${PESEL}`);
@@ -254,7 +254,7 @@ router.get("/getCitizen/:PESEL", async (req, res) => {
   }
 });
 
-// Przykłady: 
+// Przykłady:
 // http://localhost:5000/citizen/getCitizens?page=0&limit=6
 // http://localhost:5000/citizen/getCitizens?page=1&limit=6
 
@@ -266,7 +266,7 @@ router.get("/getCitizens", async (req, res) => {
       .project({ _id: 1, PESEL: 1, first_name: 1, surname: 1 })
       .sort({ _id: 1 })
       .skip(page * limit)
-      .limit(limit)
+      .limit(limit);
 
     if (findCitizen.length === 0) {
       res.send(`Nie znaleziono obywateli`);
