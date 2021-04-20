@@ -2,6 +2,12 @@ import { Schema, model } from "mongoose";
 import { isPesel, isSex } from "./Validators";
 
 const familySchema = new Schema({
+  name: {
+    type: String,
+  },
+  surname: {
+    type: String,
+  },
   type: {
     type: String,
   },
