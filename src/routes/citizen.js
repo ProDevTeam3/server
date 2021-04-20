@@ -262,16 +262,18 @@ router.get("/getCitizens", async (req, res) => {
   try {
     const page = parseInt(req.query.page);
     const limit = parseInt(req.query.limit);
-    const findCitizen = await Main.aggregate()
+    const allCitizens = await Main.find();
+
+    const findCitizens = await Main.aggregate()
       .project({ _id: 1, PESEL: 1, first_name: 1, surname: 1 })
       .sort({ _id: 1 })
       .skip(page * limit)
       .limit(limit);
 
-    if (findCitizen.length === 0) {
+    if (findCitizens.length === 0) {
       res.send(`Nie znaleziono obywateli`);
     } else {
-      res.send({ citizens: findCitizen, size: findCitizen.length });
+      res.send({ citizens: findCitizens, size: allCitizens.length });
     }
   } catch (error) {
     res.send("error" + error);
