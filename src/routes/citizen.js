@@ -221,9 +221,59 @@ router.delete("/deleteCitizen/:PESEL", async (req, res) => {
     const deleteCitizen = await Main.findOneAndDelete({ PESEL: PESEL });
 
     if (deleteCitizen === null) {
-      res.send(`Nie znaleziono osoby o PESELU: ${PESEL}`);
+      res.send(`Nie znaleziono obywatela o PESELU: ${PESEL}`);
     } else {
-      res.send(`Usunięto osobę o PESELU: ${PESEL}`);
+      res.send(`Usunięto obywatela o PESELU: ${PESEL}`);
+    }
+  } catch (error) {
+    res.send("error" + error);
+  }
+});
+
+// Przykład:
+// http://localhost:5000/citizen/getCitizen/000000000014
+
+router.get("/getCitizen/:PESEL", async (req, res) => {
+  try {
+    const PESEL = req.params.PESEL.toString();
+    const findCitizen = await Main.findOne({ PESEL: PESEL })
+      .populate({ path: "contract", populate: { path: "company" } })
+      .populate("family")
+      .populate("home_address")
+      .populate("registered_address")
+      .populate("accomodation")
+      .populate("additional_info");
+
+    if (findCitizen === null) {
+      res.send(`Nie znaleziono obywatela o PESELU: ${PESEL}`);
+    } else {
+      res.send(findCitizen);
+    }
+  } catch (error) {
+    res.send("error" + error);
+  }
+});
+
+// Przykłady:
+// http://localhost:5000/citizen/getCitizens?page=0&limit=6
+// http://localhost:5000/citizen/getCitizens?page=1&limit=6
+
+router.get("/getCitizens", async (req, res) => {
+  try {
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+    const allCitizens = await Main.find();
+
+    const findCitizens = await Main.aggregate()
+      .project({ _id: 1, PESEL: 1, first_name: 1, surname: 1 })
+      .sort({ _id: 1 })
+      .skip(page * limit)
+      .limit(limit);
+
+    if (findCitizens.length === 0) {
+      res.send(`Nie znaleziono obywateli`);
+    } else {
+      res.send({ citizens: findCitizens, size: allCitizens.length });
     }
   } catch (error) {
     res.send("error" + error);
