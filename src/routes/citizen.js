@@ -221,11 +221,10 @@ router.delete("/deleteCitizen/:PESEL", async (req, res) => {
     const deleteCitizen = await Main.findOneAndDelete({ PESEL: PESEL });
 
     if (deleteCitizen === null) {
-      res.send(`Nie znaleziono osoby o PESELU: ${PESEL}`)
+      res.send(`Nie znaleziono osoby o PESELU: ${PESEL}`);
     } else {
-      res.send(`Usunięto osobę o PESELU: ${PESEL}`)
-    };
-
+      res.send(`Usunięto osobę o PESELU: ${PESEL}`);
+    }
   } catch (error) {
     res.send("error" + error);
   }
