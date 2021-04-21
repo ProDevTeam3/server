@@ -1,7 +1,100 @@
-import express from "express";
+import Express from "express";
 import regeneratorRuntime from "regenerator-runtime";
-const router = express.router({ mergeParams: true });
-const Main = require("../models/MainModel");
+const router = Express.Router({ mergeParams: true });
+import Main from "../models/MainModel";
+import { contractType, accomodationType, education, marital, sex } from "../models/constants";
+import { notRepeatCitizen } from "../functions/notRepeatCitizen";
+
+
+// http://localhost:5000/stats
+// body: {
+// "params": ["commune", "marital_status"]
+// }
+// pierwsza wartość: nationality, city, voivodeship, district, commune
+// druga wartość: contract, martial_status, sex, education, accomodation
+router.get("/", async (req, res) => {
+  try {
+    const selectFirst = req.body.params[0]
+    const selectSecond = req.body.params[1]
+    const keys = {
+      contract: contractType,
+      sex: sex,
+      marital_status: marital,
+      education: education,
+      accomodation: accomodationType
+    };
+
+    const find = await Main.aggregate()
+      .lookup({
+        from: "contracts",
+        localField: "contract",
+        foreignField: "_id",
+        as: "contract",
+      })
+      .lookup({
+        from: "accomodations",
+        localField: "accomodation",
+        foreignField: "_id",
+        as: "accomodation",
+      })
+      .lookup({
+        from: "addresses",
+        localField: "registered_address",
+        foreignField: "_id",
+        as: "registered_address",
+      })
+      .project({
+        _id: 0, nationality: 1, city: "$registered_address.city",
+        voivodeship: "$registered_address.voivodeship",
+        district: "$registered_address.district",
+        commune: "$registered_address.commune",
+        contract: "$contract.type", sex: 1,
+        marital_status: 1, education: 1,
+        accomodation: "$accomodation.house_type"
+      })
+      .unwind(`$${selectSecond}`);
+
+    const groupByFirst = find.reduce((total, amount) => {
+      !total[amount[selectFirst]] ? (total[amount[selectFirst]] = [amount]) :
+        (total[amount[selectFirst]] = [...total[amount[selectFirst]], amount,]);
+      return total;
+    },
+      {}
+    );
+    const groupBySecond = Object.keys(groupByFirst).map(
+      (element) => {
+        return {
+          First: element,
+          Second: groupByFirst[element].reduce(
+            (total1, amount1) => {
+              !total1[amount1[selectSecond]]
+                ? (total1[amount1[selectSecond]] = [{ name: amount1[selectSecond] }])
+                : (total1[amount1[selectSecond]] = [
+                  ...total1[amount1[selectSecond]],
+                  { name: amount1[selectSecond] },
+                ]);
+              return total1;
+            },
+            {}
+          ),
+        };
+      }
+    );
+
+    const result = groupBySecond.map(({ First, Second }) => ({
+      First: First,
+      Second: keys[selectSecond].map((element) => ({
+        name: element,
+        value:
+          Second[element] === undefined ? 0 : Second[element].length,
+      })),
+    }));
+    res.send(result);
+  } catch (error) {
+    res.send("error" + error);
+  }
+});
+
 
 router.get("/nationalityByRegion", async (req, res) => {
   try {
