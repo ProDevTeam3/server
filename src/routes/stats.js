@@ -2,9 +2,14 @@ import Express from "express";
 import regeneratorRuntime from "regenerator-runtime";
 const router = Express.Router({ mergeParams: true });
 import Main from "../models/MainModel";
-import { contractType, accomodationType, education, marital, sex } from "../models/constants";
+import {
+  contractType,
+  accomodationType,
+  education,
+  marital,
+  sex,
+} from "../models/constants";
 import { notRepeatCitizen } from "../functions/notRepeatCitizen";
-
 
 // http://localhost:5000/stats
 // body: {
@@ -14,14 +19,14 @@ import { notRepeatCitizen } from "../functions/notRepeatCitizen";
 // druga wartość: contract, martial_status, sex, education, accomodation
 router.get("/", async (req, res) => {
   try {
-    const selectFirst = req.query.First
-    const selectSecond = req.query.Second
+    const selectFirst = req.query.First;
+    const selectSecond = req.query.Second;
     const keys = {
       contract: contractType,
       sex: sex,
       marital_status: marital,
       education: education,
-      accomodation: accomodationType
+      accomodation: accomodationType,
     };
 
     const find = await Main.aggregate()
@@ -44,49 +49,51 @@ router.get("/", async (req, res) => {
         as: "registered_address",
       })
       .project({
-        _id: 0, nationality: 1, city: "$registered_address.city",
+        _id: 0,
+        nationality: 1,
+        city: "$registered_address.city",
         voivodeship: "$registered_address.voivodeship",
         district: "$registered_address.district",
         commune: "$registered_address.commune",
-        contract: "$contract.type", sex: 1,
-        marital_status: 1, education: 1,
-        accomodation: "$accomodation.house_type"
+        contract: "$contract.type",
+        sex: 1,
+        marital_status: 1,
+        education: 1,
+        accomodation: "$accomodation.house_type",
       })
       .unwind(`$${selectSecond}`);
 
     const groupByFirst = find.reduce((total, amount) => {
-      !total[amount[selectFirst]] ? (total[amount[selectFirst]] = [amount]) :
-        (total[amount[selectFirst]] = [...total[amount[selectFirst]], amount,]);
+      !total[amount[selectFirst]]
+        ? (total[amount[selectFirst]] = [amount])
+        : (total[amount[selectFirst]] = [
+            ...total[amount[selectFirst]],
+            amount,
+          ]);
       return total;
-    },
-      {}
-    );
-    const groupBySecond = Object.keys(groupByFirst).map(
-      (element) => {
-        return {
-          First: element,
-          Second: groupByFirst[element].reduce(
-            (total1, amount1) => {
-              !total1[amount1[selectSecond]]
-                ? (total1[amount1[selectSecond]] = [{ name: amount1[selectSecond] }])
-                : (total1[amount1[selectSecond]] = [
-                  ...total1[amount1[selectSecond]],
-                  { name: amount1[selectSecond] },
-                ]);
-              return total1;
-            },
-            {}
-          ),
-        };
-      }
-    );
+    }, {});
+    const groupBySecond = Object.keys(groupByFirst).map((element) => {
+      return {
+        First: element,
+        Second: groupByFirst[element].reduce((total1, amount1) => {
+          !total1[amount1[selectSecond]]
+            ? (total1[amount1[selectSecond]] = [
+                { name: amount1[selectSecond] },
+              ])
+            : (total1[amount1[selectSecond]] = [
+                ...total1[amount1[selectSecond]],
+                { name: amount1[selectSecond] },
+              ]);
+          return total1;
+        }, {}),
+      };
+    });
 
     const result = groupBySecond.map(({ First, Second }) => ({
       First: First,
       Second: keys[selectSecond].map((element) => ({
         name: element,
-        value:
-          Second[element] === undefined ? 0 : Second[element].length,
+        value: Second[element] === undefined ? 0 : Second[element].length,
       })),
     }));
     res.send(result);
@@ -94,7 +101,6 @@ router.get("/", async (req, res) => {
     res.send("error" + error);
   }
 });
-
 
 router.get("/nationalityByRegion", async (req, res) => {
   try {
