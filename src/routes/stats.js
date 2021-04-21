@@ -14,8 +14,8 @@ import { notRepeatCitizen } from "../functions/notRepeatCitizen";
 // druga wartość: contract, martial_status, sex, education, accomodation
 router.get("/", async (req, res) => {
   try {
-    const selectFirst = req.body.params[0]
-    const selectSecond = req.body.params[1]
+    const selectFirst = req.query.First
+    const selectSecond = req.query.Second
     const keys = {
       contract: contractType,
       sex: sex,
