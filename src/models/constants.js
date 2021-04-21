@@ -21,4 +21,4 @@ export const education = ["PODSTAWOWE", "ŚREDNIE", "WYŻSZE"];
 
 export const marital = ["ŻONATY", "MĘŻATKA", "KAWALER", "PANNA"];
 
-export const sex = ["F", "M"];
+export const sex = ["K", "M"];
