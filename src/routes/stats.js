@@ -9,12 +9,7 @@ import {
   marital,
   sex,
 } from "../models/constants";
-import { notRepeatCitizen } from "../functions/notRepeatCitizen";
 
-// http://localhost:5000/stats
-// body: {
-// "params": ["commune", "marital_status"]
-// }
 // pierwsza wartość: nationality, city, voivodeship, district, commune
 // druga wartość: contract, martial_status, sex, education, accomodation
 router.get("/", async (req, res) => {
@@ -90,8 +85,8 @@ router.get("/", async (req, res) => {
     });
 
     const result = groupBySecond.map(({ First, Second }) => ({
-      First: First,
-      Second: keys[selectSecond].map((element) => ({
+      label: First,
+      values: keys[selectSecond].map((element) => ({
         name: element,
         value: Second[element] === undefined ? 0 : Second[element].length,
       })),
