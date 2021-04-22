@@ -30,5 +30,4 @@ export const marital = [
   "ROZWIEDZIONA",
 ];
 
-
 export const sex = ["K", "M"];
