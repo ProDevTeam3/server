@@ -70,22 +70,22 @@ router.post("/addCitizen", async (req, res) => {
       }
 
       // Znalezienie id dla kontraktów
-      const idContracts = await company.reduce((total, amount) => {
+      const idContracts = await (company ?? []).reduce((total, amount) => {
         return [...total, ...amount];
       }, []);
 
-      const notRepeatFamily = family.reduce((total, amount) => {
+      const notRepeatFamily = (family ?? []).reduce((total, amount) => {
         return !total.includes(amount.PESEL) ? [...total, amount.PESEL] : total;
       }, []);
 
       // Sprawdzenie czy członkowie rodziny już istniejeją, jeśli nie to zostaną utworzeni
       if (
-        notRepeatFamily.length !== family.length ||
+        notRepeatFamily.length !== (family ?? []).length ||
         notRepeatFamily.includes(PESEL)
       ) {
         return res.send("Enter appropriate PESELE in family");
       } else {
-        if (family.length > 0) {
+        if ((family ?? []).length > 0) {
           for (let index = 0; index < family.length; index++) {
             if (await notRepeatCitizen(family[index].PESEL, Family)) {
               await Family.create(family[index]);
@@ -127,10 +127,10 @@ router.post("/addCitizen", async (req, res) => {
 
       res.send("Add citizen");
     } else {
-      res.send("Not add citizen");
+      res.status("400").send("Not add citizen");
     }
   } catch (error) {
-    res.send("error" + error);
+    res.status("400").send("error" + error);
   }
 });
 

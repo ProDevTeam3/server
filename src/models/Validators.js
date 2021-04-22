@@ -2,7 +2,7 @@ import { countries } from "./countries";
 
 export const isSex = (sex) => sex === "M" || sex === "K";
 
-export const isPesel = (pesel) => pesel.toString().length === 12;
+export const isPesel = (pesel) => pesel.toString().length === 11;
 export const isMartialStatus = (status) => {
   const statuses = ["ŻONATY", "MĘŻATKA", "KAWALER", "PANNA"];
   return statuses.includes(status);
@@ -31,7 +31,7 @@ export const isVoideShip = (voide) => {
     "wielkopolskie",
     "zachodniopomorskie",
   ];
-  return voides.includes(voide);
+  return voides.includes(voide.toLowerCase());
 };
 export const isCountry = (countryName) =>
   !!countries.find((country) => country.name_pl === countryName);
