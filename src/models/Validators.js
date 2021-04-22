@@ -4,7 +4,16 @@ export const isSex = (sex) => sex === "M" || sex === "K";
 
 export const isPesel = (pesel) => pesel.toString().length === 11;
 export const isMartialStatus = (status) => {
-  const statuses = ["ŻONATY", "ZAMĘŻNA", "KAWALER", "PANNA", "WDOWIEC", "WDOWA", "ROZWIEDZIONY", "ROZWIEDZIONA"];
+  const statuses = [
+    "ŻONATY",
+    "ZAMĘŻNA",
+    "KAWALER",
+    "PANNA",
+    "WDOWIEC",
+    "WDOWA",
+    "ROZWIEDZIONY",
+    "ROZWIEDZIONA",
+  ];
   return statuses.includes(status);
 };
 export const isEducation = (edu) => {
