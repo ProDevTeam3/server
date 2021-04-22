@@ -8,7 +8,7 @@ const app = express();
 
 const corsOptions = {
   origin: ["https://www.prodevteam3.ml", "https://prodevteam3.ml"],
-  credentials: true
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
