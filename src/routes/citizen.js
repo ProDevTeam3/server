@@ -127,7 +127,9 @@ router.post("/addCitizen", async (req, res) => {
 
       return res.send("Pomyślnie dodano obywatela do bazy danych");
     } else {
-      return res.status("400").send("Obywatel o danym numerze PESEL znajduje się już w bazie danych");
+      return res
+        .status("400")
+        .send("Obywatel o danym numerze PESEL znajduje się już w bazie danych");
     }
   } catch (error) {
     return res.status("400").send("error" + error);
