@@ -63,9 +63,9 @@ router.get("/", async (req, res) => {
       !total[amount[selectFirst]]
         ? (total[amount[selectFirst]] = [amount])
         : (total[amount[selectFirst]] = [
-            ...total[amount[selectFirst]],
-            amount,
-          ]);
+          ...total[amount[selectFirst]],
+          amount,
+        ]);
       return total;
     }, {});
     const groupBySecond = Object.keys(groupByFirst).map((element) => {
@@ -74,12 +74,12 @@ router.get("/", async (req, res) => {
         Second: groupByFirst[element].reduce((total1, amount1) => {
           !total1[amount1[selectSecond]]
             ? (total1[amount1[selectSecond]] = [
-                { name: amount1[selectSecond] },
-              ])
+              { name: amount1[selectSecond] },
+            ])
             : (total1[amount1[selectSecond]] = [
-                ...total1[amount1[selectSecond]],
-                { name: amount1[selectSecond] },
-              ]);
+              ...total1[amount1[selectSecond]],
+              { name: amount1[selectSecond] },
+            ]);
           return total1;
         }, {}),
       };
@@ -100,11 +100,10 @@ router.get("/", async (req, res) => {
       ])
       .sort((a, b) => b[0] - a[0])
       .slice(0, size)
-      .map((next) => next[1]);
+      .map((next) => next[1])
+      .map(next => data[next]);
 
-    const reduced = result.filter((next, index) => indices.includes(index));
-
-    res.send(reduced);
+    res.send(indices);
   } catch (error) {
     res.status("400").send("error" + error);
   }
