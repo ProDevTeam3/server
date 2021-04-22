@@ -41,7 +41,7 @@ router.post("/addCitizen", async (req, res) => {
       const idRegistredAdress = findRegistredAdress[0]["_id"];
 
       // Szukanie id kontraktów i firm
-      if (company.length > 0) {
+      if (company?.length > 0) {
         for (let index = 0; index < company.length; index++) {
           const { name, NIP, industry, contract } = company[index];
           const dataCompany = { name: name, NIP: NIP, industry: industry };
@@ -53,7 +53,7 @@ router.post("/addCitizen", async (req, res) => {
           const findCompany = await Company.find(dataCompany);
           const idCompany = await findCompany[0]["_id"];
 
-          if (contract.length > 0) {
+          if (contract?.length > 0) {
             for (let index = 0; index < contract.length; index++) {
               const dataContract = { ...contract[index], company: idCompany };
               // Sprawdzenie czy kontrakt już istnieje, jeśli nie to zostanie utworzony
@@ -85,7 +85,7 @@ router.post("/addCitizen", async (req, res) => {
       ) {
         return res.send("Enter appropriate PESELE in family");
       } else {
-        if ((family ?? []).length > 0) {
+        if (family?.length > 0) {
           for (let index = 0; index < family.length; index++) {
             if (await notRepeatCitizen(family[index].PESEL, Family)) {
               await Family.create(family[index]);
@@ -125,12 +125,12 @@ router.post("/addCitizen", async (req, res) => {
         additional_info: idAdditionalInfo,
       });
 
-      res.send("Add citizen");
+      return res.send("Pomyślnie dodano obywatela do bazy danych");
     } else {
-      res.status("400").send("Not add citizen");
+      return res.status("400").send("Obywatel o danym numerze PESEL znajduje się już w bazie danych");
     }
   } catch (error) {
-    res.status("400").send("error" + error);
+    return res.status("400").send("error" + error);
   }
 });
 
