@@ -63,9 +63,9 @@ router.get("/", async (req, res) => {
       !total[amount[selectFirst]]
         ? (total[amount[selectFirst]] = [amount])
         : (total[amount[selectFirst]] = [
-          ...total[amount[selectFirst]],
-          amount,
-        ]);
+            ...total[amount[selectFirst]],
+            amount,
+          ]);
       return total;
     }, {});
     const groupBySecond = Object.keys(groupByFirst).map((element) => {
@@ -74,12 +74,12 @@ router.get("/", async (req, res) => {
         Second: groupByFirst[element].reduce((total1, amount1) => {
           !total1[amount1[selectSecond]]
             ? (total1[amount1[selectSecond]] = [
-              { name: amount1[selectSecond] },
-            ])
+                { name: amount1[selectSecond] },
+              ])
             : (total1[amount1[selectSecond]] = [
-              ...total1[amount1[selectSecond]],
-              { name: amount1[selectSecond] },
-            ]);
+                ...total1[amount1[selectSecond]],
+                { name: amount1[selectSecond] },
+              ]);
           return total1;
         }, {}),
       };
