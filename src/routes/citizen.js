@@ -11,7 +11,6 @@ import Company from "../models/companyModel";
 import { notRepeatCitizen } from "../functions/notRepeatCitizen";
 import { notRepeat } from "../functions/notRepeat";
 
-
 router.post("/addCitizen", async (req, res) => {
   try {
     const {
@@ -243,20 +242,21 @@ router.put("/updateCitizen", async (req, res) => {
 
       // Zapisanie nowego obywatela
 
-      await Main.findOneAndUpdate({PESEL: PESEL}, {
-        ...req.body,
-        home_address: idHomeAdress,
-        registered_address: idRegistredAdress,
-        contract: idContracts,
-        accomodation: idAccomodation,
-        additional_info: idAdditionalInfo,
-      });
+      await Main.findOneAndUpdate(
+        { PESEL: PESEL },
+        {
+          ...req.body,
+          home_address: idHomeAdress,
+          registered_address: idRegistredAdress,
+          contract: idContracts,
+          accomodation: idAccomodation,
+          additional_info: idAdditionalInfo,
+        }
+      );
 
       return res.send("Pomyślnie zaktualizowane dane obywatele z bazie danych");
     } else {
-      return res
-        .status("400")
-        .send("Błąd");
+      return res.status("400").send("Błąd");
     }
   } catch (error) {
     return res.status("400").send("error" + error);
