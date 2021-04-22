@@ -6,16 +6,16 @@ import stats from "./routes/stats";
 
 const app = express();
 
-const whitelist = ['https://www.prodevteam3.ml', 'https://prodevteam3.ml']
+const whitelist = ["https://www.prodevteam3.ml", "https://prodevteam3.ml"];
 const corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.includes(origin)) {
-      callback(null, true)
+      callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'))
+      callback(new Error("Not allowed by CORS"));
     }
-  }
-}
+  },
+};
 
 app.use(cors(corsOptions));
 app.use(express.json());
