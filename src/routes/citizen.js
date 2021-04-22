@@ -136,6 +136,133 @@ router.post("/addCitizen", async (req, res) => {
   }
 });
 
+router.put("/updateCitizen", async (req, res) => {
+  try {
+    const {
+      PESEL,
+      home_address,
+      registered_address,
+      company,
+      family,
+      accomodation,
+      additional_info,
+    } = req.body;
+    // Sprawdzenie czy obywatel już istnieje
+    if (await notRepeatCitizen(PESEL, Main)) {
+      // Sprawdzenie czy adres domowy już istnieje, jeśli nie to zostanie utworzony
+      if (await notRepeat(home_address, Address)) {
+        await Address.create(home_address);
+      }
+      // Znalezienie id dla adresu domowego
+      const findHomeAdress = await Address.find(home_address);
+      const idHomeAdress = findHomeAdress[0]["_id"];
+
+      // Sprawdzenie czy adres zameldowania już istnieje, jeśli nie to zostanie utworzony
+      if (await notRepeat(registered_address, Address)) {
+        await Address.create(registered_address);
+      }
+      // Znalezienie id dla adresu zameldowania
+      const findRegistredAdress = await Address.find(registered_address);
+      const idRegistredAdress = findRegistredAdress[0]["_id"];
+
+      // Szukanie id kontraktów i firm
+      if (company?.length > 0) {
+        for (let index = 0; index < company.length; index++) {
+          const { name, NIP, industry, contract } = company[index];
+          const dataCompany = { name: name, NIP: NIP, industry: industry };
+          // Sprawdzenie czy firma już istnieje, jeśli nie to zostanie utworzona
+          if (await notRepeat(dataCompany, Company)) {
+            await Company.create(dataCompany);
+          }
+          // Znalezienie id firmy
+          const findCompany = await Company.find(dataCompany);
+          const idCompany = await findCompany[0]["_id"];
+
+          if (contract?.length > 0) {
+            for (let index = 0; index < contract.length; index++) {
+              const dataContract = { ...contract[index], company: idCompany };
+              // Sprawdzenie czy kontrakt już istnieje, jeśli nie to zostanie utworzony
+              if (await notRepeat(dataContract, Contract)) {
+                await Contract.create(dataContract);
+              }
+              // Znalezienie id kontraktu
+              const findContract = await Contract.find(dataContract);
+              contract[index] = await findContract[0]["_id"];
+            }
+            company[index] = contract;
+          }
+        }
+      }
+
+      // Znalezienie id dla kontraktów
+      const idContracts = await (company ?? []).reduce((total, amount) => {
+        return [...total, ...amount];
+      }, []);
+
+      const notRepeatFamily = (family ?? []).reduce((total, amount) => {
+        return !total.includes(amount.PESEL) ? [...total, amount.PESEL] : total;
+      }, []);
+
+      // Sprawdzenie czy członkowie rodziny już istniejeją, jeśli nie to zostaną utworzeni
+      if (
+        notRepeatFamily.length !== (family ?? []).length ||
+        notRepeatFamily.includes(PESEL)
+      ) {
+        return res.send("Enter appropriate PESELE in family");
+      } else {
+        if (family?.length > 0) {
+          for (let index = 0; index < family.length; index++) {
+            if (await notRepeatCitizen(family[index].PESEL, Family)) {
+              await Family.create(family[index]);
+            }
+            // Znalezienie id członka rodzinny
+            const findPerson = await Family.find({
+              PESEL: family[index].PESEL,
+            });
+            family[index] = await findPerson[0]["_id"];
+          }
+        }
+      }
+
+      // Sprawdzenie czy zakwaterowanie już istnieje, jeśli nie to zostanie utworzone
+      if (await notRepeat(accomodation, Accomodation)) {
+        await Accomodation.create(accomodation);
+      }
+      // Znalezienie id zakwaterowania
+      const findAccomodation = await Accomodation.find(accomodation);
+      const idAccomodation = findAccomodation[0]["_id"];
+
+      // Sprawdzenie czy dodatkowe informacje już istnieją, jeśli nie to zostaną utworzone
+      if (await notRepeat(additional_info, Additional_info)) {
+        await Additional_info.create(additional_info);
+      }
+      // Znalezienie id dodatkowych informacji
+      const findAdditionalInfo = await Additional_info.find(additional_info);
+      const idAdditionalInfo = findAdditionalInfo[0]["_id"];
+
+      // Zapisanie nowego obywatela
+
+      await Main.findOneAndUpdate(
+        { PESEL: PESEL },
+        {
+          ...req.body,
+          home_address: idHomeAdress,
+          registered_address: idRegistredAdress,
+          contract: idContracts,
+          accomodation: idAccomodation,
+          additional_info: idAdditionalInfo,
+        }
+      );
+
+      return res.send("Pomyślnie zaktualizowane dane obywatele z bazie danych");
+    } else {
+      return res.status("400").send("Błąd");
+    }
+  } catch (error) {
+    return res.status("400").send("error" + error);
+  }
+});
+
 // Przykład
 
 // {
