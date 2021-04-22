@@ -19,6 +19,16 @@ export const accomodationType = [
 
 export const education = ["PODSTAWOWE", "ŚREDNIE", "WYŻSZE"];
 
-export const marital = ["ŻONATY", "MĘŻATKA", "KAWALER", "PANNA"];
+export const marital = [
+  "ŻONATY",
+  "ZAMĘŻNA",
+  "KAWALER",
+  "PANNA",
+  "WDOWIEC",
+  "WDOWA",
+  "ROZWIEDZIONY",
+  "ROZWIEDZIONA",
+];
+
 
 export const sex = ["K", "M"];
