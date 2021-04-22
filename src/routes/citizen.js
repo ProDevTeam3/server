@@ -228,7 +228,7 @@ router.delete("/deleteCitizen/:PESEL", async (req, res) => {
       res.send(`Usunięto obywatela o PESELU: ${PESEL}`);
     }
   } catch (error) {
-    res.send("error" + error);
+    res.status("400").send("error" + error);
   }
 });
 
@@ -252,7 +252,7 @@ router.get("/getCitizen/:PESEL", async (req, res) => {
       res.send(findCitizen);
     }
   } catch (error) {
-    res.send("error" + error);
+    res.status("400").send("error" + error);
   }
 });
 
@@ -278,7 +278,7 @@ router.get("/getCitizens", async (req, res) => {
       res.send({ citizens: findCitizens, size: allCitizens.length });
     }
   } catch (error) {
-    res.send("error" + error);
+    res.status("400").send("error" + error);
   }
 });
 

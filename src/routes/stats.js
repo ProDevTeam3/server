@@ -16,6 +16,7 @@ router.get("/", async (req, res) => {
   try {
     const selectFirst = req.query.First;
     const selectSecond = req.query.Second;
+    const size = parseInt(req.query.Third);
     const keys = {
       contract: contractType,
       sex: sex,
@@ -91,9 +92,21 @@ router.get("/", async (req, res) => {
         value: Second[element] === undefined ? 0 : Second[element].length,
       })),
     }));
-    res.send(result);
+
+    const indices = result
+      .map((next, index) => [
+        next.values.reduce((acc, el) => acc + el.value, 0),
+        index,
+      ])
+      .sort((a, b) => b[0] - a[0])
+      .slice(0, size)
+      .map((next) => next[1]);
+
+    const reduced = result.filter((next, index) => indices.includes(index));
+
+    res.send(reduced);
   } catch (error) {
-    res.send("error" + error);
+    res.status("400").send("error" + error);
   }
 });
 
