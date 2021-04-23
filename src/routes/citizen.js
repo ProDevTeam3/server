@@ -83,7 +83,7 @@ router.post("/addCitizen", async (req, res) => {
         notRepeatFamily.length !== (family ?? []).length ||
         notRepeatFamily.includes(PESEL)
       ) {
-        return res.send("Enter appropriate PESELE in family");
+        return res.send("Wpisz odpowiedni PESEL w członkach rodziny");
       } else {
         if (family?.length > 0) {
           for (let index = 0; index < family.length; index++) {
@@ -136,8 +136,9 @@ router.post("/addCitizen", async (req, res) => {
   }
 });
 
-router.put("/updateCitizen", async (req, res) => {
+router.put("/updateCitizen/:id", async (req, res) => {
   try {
+    const id = req.params.id
     const {
       PESEL,
       home_address,
@@ -148,7 +149,7 @@ router.put("/updateCitizen", async (req, res) => {
       additional_info,
     } = req.body;
     // Sprawdzenie czy obywatel już istnieje
-    if (await notRepeatCitizen(PESEL, Main)) {
+    if (await !notRepeatCitizen(PESEL, Main)) {
       // Sprawdzenie czy adres domowy już istnieje, jeśli nie to zostanie utworzony
       if (await notRepeat(home_address, Address)) {
         await Address.create(home_address);
@@ -208,17 +209,15 @@ router.put("/updateCitizen", async (req, res) => {
         notRepeatFamily.length !== (family ?? []).length ||
         notRepeatFamily.includes(PESEL)
       ) {
-        return res.send("Enter appropriate PESELE in family");
+        return res.send("Wpisz odpowiedni PESEL w członkach rodziny");
       } else {
         if (family?.length > 0) {
           for (let index = 0; index < family.length; index++) {
-            if (await notRepeatCitizen(family[index].PESEL, Family)) {
+            if (await notRepeat(family[index], Family)) {
               await Family.create(family[index]);
             }
             // Znalezienie id członka rodzinny
-            const findPerson = await Family.find({
-              PESEL: family[index].PESEL,
-            });
+            const findPerson = await Family.find(family[index]);
             family[index] = await findPerson[0]["_id"];
           }
         }
@@ -243,7 +242,7 @@ router.put("/updateCitizen", async (req, res) => {
       // Zapisanie nowego obywatela
 
       await Main.findOneAndUpdate(
-        { PESEL: PESEL },
+        { _id: id },
         {
           ...req.body,
           home_address: idHomeAdress,
@@ -254,9 +253,9 @@ router.put("/updateCitizen", async (req, res) => {
         }
       );
 
-      return res.send("Pomyślnie zaktualizowane dane obywatele z bazie danych");
+      return res.send("Pomyślnie zaktualizowane dane obywatela w bazie danych");
     } else {
-      return res.status("400").send("Błąd");
+      return res.send("Obywatel o danym numerze PESEL nie znajduje się w bazie danych");
     }
   } catch (error) {
     return res.status("400").send("error" + error);
