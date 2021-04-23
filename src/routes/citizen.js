@@ -138,7 +138,7 @@ router.post("/addCitizen", async (req, res) => {
 
 router.put("/updateCitizen/:id", async (req, res) => {
   try {
-    const id = req.params.id
+    const id = req.params.id;
     const {
       PESEL,
       home_address,
@@ -255,7 +255,9 @@ router.put("/updateCitizen/:id", async (req, res) => {
 
       return res.send("Pomyślnie zaktualizowane dane obywatela w bazie danych");
     } else {
-      return res.send("Obywatel o danym numerze PESEL nie znajduje się w bazie danych");
+      return res.send(
+        "Obywatel o danym numerze PESEL nie znajduje się w bazie danych"
+      );
     }
   } catch (error) {
     return res.status("400").send("error" + error);
