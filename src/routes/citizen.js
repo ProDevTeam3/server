@@ -253,7 +253,7 @@ router.put("/updateCitizen/:id", async (req, res) => {
         }
       );
 
-      return res.send("Pomyślnie zaktualizowane dane obywatela w bazie danych");
+      return res.send("Pomyślnie zaktualizowano dane obywatela w bazie danych");
     } else {
       return res.send(
         "Obywatel o danym numerze PESEL nie znajduje się w bazie danych"
